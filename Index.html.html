@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Lina Ismaeel — Obstetrician &amp; Gynecologist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a14;
+    --bg-alt:#0e0d1b;
+    --panel:#141225;
+    --panel-2:#181530;
+    --line:rgba(255,255,255,.08);
+    --indigo:#6a5cff;
+    --pink:#ff3d90;
+    --cyan:#2fe0d0;
+    --amber:#ffb84d;
+    --text:#f1eefb;
+    --muted:#9994b8;
+    --muted-2:#6d6890;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+    position:relative;
+  }
+  ::selection{background:var(--pink);color:#0a0a14;}
+
+  /* noise overlay */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:5;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+
+  h1,h2,h3,h4,.font-display{
+    font-family:'Syne',sans-serif;
+    letter-spacing:-0.01em;
+  }
+
+  a{color:inherit;text-decoration:none;}
+
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,var(--indigo),var(--pink));
+    border-radius:10px;
+    border:2px solid var(--bg);
+  }
+
+  #particle-canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  /* cursor */
+  .cursor-dot,.cursor-ring{
+    position:fixed;
+    top:0;left:0;
+    pointer-events:none;
+    z-index:9999;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+  }
+  .cursor-dot{
+    width:7px;height:7px;
+    background:var(--pink);
+    box-shadow:0 0 10px 2px var(--pink);
+  }
+  .cursor-ring{
+    width:34px;height:34px;
+    border:1.4px solid rgba(255,255,255,.55);
+    transition:width .2s ease,height .2s ease,border-color .2s ease,background .2s ease;
+  }
+  .cursor-ring.active{
+    width:52px;height:52px;
+    border-color:var(--cyan);
+    background:rgba(47,224,208,.08);
+  }
+  @media (hover:none){
+    body{cursor:auto;}
+    .cursor-dot,.cursor-ring{display:none;}
+  }
+
+  /* loader */
+  #loader{
+    position:fixed;inset:0;z-index:10000;
+    background:var(--bg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:22px;
+    transition:opacity .7s ease, visibility .7s ease;
+  }
+  #loader.hide{opacity:0;visibility:hidden;}
+  .loader-initials{
+    font-family:'Syne',sans-serif;
+    font-size:clamp(48px,10vw,84px);
+    font-weight:800;
+    background:linear-gradient(100deg,var(--indigo),var(--pink) 45%,var(--amber) 80%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:.02em;
+  }
+  .loader-bar{
+    width:min(220px,60vw);
+    height:3px;
+    background:rgba(255,255,255,.08);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .loader-bar-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--indigo),var(--cyan),var(--pink));
+    background-size:200% 100%;
+    animation:loaderGradient 1.4s linear infinite;
+    border-radius:4px;
+  }
+  @keyframes loaderGradient{
+    0%{background-position:0% 0;}
+    100%{background-position:200% 0;}
+  }
+  .loader-label{
+    font-size:12px;
+    letter-spacing:.15em;
+    color:var(--muted-2);
+  }
+
+  section{
+    position:relative;
+    z-index:1;
+    padding:120px max(24px,6vw);
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+  .eyebrow{
+    font-size:13px;
+    color:var(--cyan);
+    font-weight:600;
+  }
+  .section-head{margin-bottom:56px;max-width:640px;}
+  .section-head h2{
+    font-size:clamp(30px,4vw,44px);
+    font-weight:700;
+    margin-top:10px;
+    line-height:1.15;
+  }
+  .section-head p{color:var(--muted);margin-top:14px;font-size:16px;line-height:1.6;}
+
+  /* reveal */
+  .reveal{opacity:0;transition:opacity .8s ease, transform .8s ease;}
+  .reveal.up{transform:translateY(36px);}
+  .reveal.left{transform:translateX(-46px);}
+  .reveal.right{transform:translateX(46px);}
+  .reveal.in{opacity:1;transform:translate(0,0);}
+
+  /* navbar */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    padding:0 max(20px,5vw);
+    height:76px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(10,10,20,.55);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--line);
+    transform:translateY(-100%);
+    transition:transform .8s cubic-bezier(.16,1,.3,1);
+  }
+  nav.show{transform:translateY(0);}
+  .logo{
+    font-family:'Syne',sans-serif;
+    font-weight:700;
+    font-size:19px;
+  }
+  .logo span{color:var(--pink);}
+  .nav-links{display:flex;gap:34px;list-style:none;}
+  .nav-links a{
+    position:relative;
+    font-size:14px;
+    color:var(--muted);
+    padding-bottom:4px;
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute;left:0;bottom:0;
+    width:0;height:1.5px;
+    background:linear-gradient(90deg,var(--cyan),var(--pink));
+    transition:width .3s ease;
+  }
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a:hover::after{width:100%;}
+  .nav-toggle{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;}
+
+  /* hero */
+  #hero{
+    min-height:100vh;
+    display:flex;align-items:center;
+    padding-top:110px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:60px;
+    align-items:center;
+    width:100%;
+  }
+  .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    border-radius:100px;
+    font-size:12.5px;
+    color:var(--cyan);
+    background:rgba(47,224,208,.06);
+    margin-bottom:26px;
+  }
+  .tag::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:var(--cyan);
+    box-shadow:0 0 8px 2px var(--cyan);
+  }
+  .hero-name{
+    font-size:clamp(42px,6.4vw,80px);
+    font-weight:800;
+    line-height:1.02;
+    background:linear-gradient(100deg,#fff 20%,var(--indigo) 45%,var(--pink) 65%,var(--amber) 90%);
+    background-size:300% auto;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:shimmer 7s linear infinite;
+  }
+  @keyframes shimmer{
+    0%{background-position:0% 50%;}
+    100%{background-position:300% 50%;}
+  }
+  .hero-role{
+    margin-top:18px;
+    font-size:clamp(17px,2vw,21px);
+    color:var(--muted);
+    max-width:520px;
+    line-height:1.5;
+  }
+  .hero-cta{display:flex;gap:16px;margin-top:38px;flex-wrap:wrap;}
+  .btn{
+    padding:14px 26px;
+    border-radius:100px;
+    font-size:14.5px;
+    font-weight:600;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-solid{
+    background:linear-gradient(100deg,var(--indigo),var(--pink));
+    color:#fff;
+  }
+  .btn-solid:hover{transform:translateY(-3px);box-shadow:0 14px 30px -10px rgba(255,61,144,.55);}
+  .btn-ghost{
+    border:1px solid var(--line);
+    color:var(--text);
+  }
+  .btn-ghost:hover{transform:translateY(-3px);border-color:var(--cyan);color:var(--cyan);}
+
+  /* hero card */
+  .hero-card-wrap{
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    height:420px;
+  }
+  .orb{
+    position:absolute;
+    width:340px;height:340px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(106,92,255,.35),transparent 70%);
+    filter:blur(10px);
+    animation:orbPulse 5s ease-in-out infinite;
+  }
+  @keyframes orbPulse{
+    0%,100%{transform:scale(1);opacity:.7;}
+    50%{transform:scale(1.12);opacity:1;}
+  }
+  .ring{
+    position:absolute;
+    width:270px;height:270px;
+    border:1.5px dashed rgba(255,255,255,.25);
+    border-radius:50%;
+    animation:spin 16s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .float-card{
+    position:relative;
+    width:250px;
+    padding:30px 26px;
+    background:linear-gradient(160deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+    animation:floatCard 5s ease-in-out infinite;
+    backdrop-filter:blur(6px);
+  }
+  @keyframes floatCard{
+    0%,100%{transform:translateY(0) rotate(-1deg);}
+    50%{transform:translateY(-16px) rotate(1deg);}
+  }
+  .float-initials{
+    font-family:'Syne',sans-serif;
+    font-size:34px;font-weight:800;
+    background:linear-gradient(100deg,var(--cyan),var(--indigo));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .float-card .role{color:var(--muted);font-size:13px;margin-top:6px;}
+  .float-stats{margin-top:22px;display:flex;flex-direction:column;gap:12px;}
+  .float-stat{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:10px;}
+  .float-stat b{font-family:'Syne',sans-serif;font-size:18px;color:var(--amber);}
+  .float-stat span{font-size:11.5px;color:var(--muted-2);}
+
+  /* marquee */
+  .marquee-outer{
+    overflow:hidden;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    background:rgba(255,255,255,.015);
+  }
+  .marquee-track{
+    display:flex;
+    width:max-content;
+    gap:60px;
+    animation:marquee 32s linear infinite;
+  }
+  @keyframes marquee{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  .marquee-item{
+    font-family:'Syne',sans-serif;
+    font-size:15px;
+    color:var(--muted-2);
+    white-space:nowrap;
+    display:flex;align-items:center;gap:10px;
+  }
+  .marquee-item::before{content:"◆";color:var(--pink);font-size:9px;}
+
+  /* skills */
+  .skills-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;}
+  .skill-row{margin-bottom:26px;}
+  .skill-top{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:9px;}
+  .skill-top span:last-child{color:var(--cyan);font-family:'Syne',sans-serif;font-weight:600;}
+  .skill-track{
+    height:8px;border-radius:6px;
+    background:rgba(255,255,255,.06);
+    overflow:hidden;position:relative;
+  }
+  .skill-fill{
+    height:100%;width:0%;
+    border-radius:6px;
+    background:linear-gradient(90deg,var(--indigo),var(--cyan));
+    position:relative;
+    transition:width 1.4s cubic-bezier(.16,1,.3,1);
+  }
+  .skill-fill::after{
+    content:"";
+    position:absolute;top:0;right:0;bottom:0;width:40px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);
+    transform:translateX(100%);
+  }
+  .skill-fill.shine::after{animation:shine 1s ease forwards .8s;}
+  @keyframes shine{
+    to{transform:translateX(300%);}
+  }
+  .chip-cloud{display:flex;flex-wrap:wrap;gap:12px;align-content:flex-start;}
+  .chip{
+    padding:9px 16px;
+    border-radius:100px;
+    border:1px solid var(--line);
+    font-size:13px;
+    color:var(--muted);
+    background:var(--panel);
+    transition:transform .3s ease, color .3s ease, border-color .3s ease;
+  }
+  .chip:hover{
+    transform:translateY(-6px);
+    color:var(--text);
+    border-color:var(--amber);
+  }
+  .chip:nth-child(3n){border-color:rgba(106,92,255,.35);}
+  .chip:nth-child(3n+1){border-color:rgba(255,61,144,.25);}
+
+  /* experience */
+  .timeline{position:relative;padding-left:34px;}
+  .timeline::before{
+    content:"";
+    position:absolute;left:6px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(180deg,var(--indigo),var(--cyan),var(--pink),var(--amber));
+    background-size:100% 300%;
+    animation:tlGradient 6s linear infinite;
+    border-radius:2px;
+  }
+  @keyframes tlGradient{
+    0%{background-position:0 0;}
+    100%{background-position:0 300%;}
+  }
+  .tl-item{
+    position:relative;
+    margin-bottom:34px;
+    padding:24px 26px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+  }
+  .tl-item::before{
+    content:"";
+    position:absolute;left:-34px;top:28px;
+    width:11px;height:11px;border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--cyan);
+  }
+  .tl-item:hover{
+    transform:translateX(10px);
+    border-color:var(--cyan);
+    box-shadow:0 20px 40px -20px rgba(47,224,208,.35);
+  }
+  .tl-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;}
+  .tl-role{font-family:'Syne',sans-serif;font-weight:700;font-size:17.5px;}
+  .tl-date{
+    font-size:12.5px;color:var(--amber);
+    border:1px solid rgba(255,184,77,.35);
+    padding:3px 12px;border-radius:100px;white-space:nowrap;height:fit-content;
+  }
+  .tl-org{font-size:14px;color:var(--muted);margin-bottom:12px;}
+  .tl-badges{display:flex;gap:8px;flex-wrap:wrap;}
+  .badge{
+    font-size:11.5px;padding:4px 11px;border-radius:6px;
+    background:rgba(106,92,255,.12);color:#b7aeff;
+  }
+
+  /* projects / procedures */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .proc-card{
+    position:relative;
+    padding:30px 26px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .proc-card::before{
+    content:"";
+    position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--indigo),var(--cyan),var(--pink),var(--amber));
+    transform:translateX(-100%);
+    transition:transform .5s ease;
+  }
+  .proc-card:hover{transform:translateY(-10px);box-shadow:0 26px 50px -22px rgba(106,92,255,.4);}
+  .proc-card:hover::before{transform:translateX(0);}
+  .proc-emoji{font-size:30px;margin-bottom:16px;display:block;}
+  .proc-card h3{font-size:17.5px;margin-bottom:8px;}
+  .proc-count{
+    font-family:'Syne',sans-serif;
+    font-size:26px;font-weight:800;
+    color:var(--cyan);
+    margin-bottom:10px;
+  }
+  .proc-card p{font-size:13.5px;color:var(--muted);line-height:1.55;}
+
+  .recent-table{
+    margin-top:60px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .recent-table table{width:100%;border-collapse:collapse;}
+  .recent-table th{
+    text-align:left;font-family:'Syne',sans-serif;font-size:12.5px;
+    letter-spacing:.03em;color:var(--muted-2);
+    padding:16px 22px;background:var(--panel-2);
+  }
+  .recent-table td{
+    padding:15px 22px;font-size:14px;border-top:1px solid var(--line);color:var(--muted);
+  }
+  .recent-table tr:hover td{color:var(--text);background:rgba(255,255,255,.02);}
+  .recent-table td.num{color:var(--amber);font-family:'Syne',sans-serif;font-weight:600;}
+
+  /* education */
+  .edu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:60px;}
+  .edu-card{
+    padding:26px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+  }
+  .edu-year{color:var(--pink);font-size:12.5px;font-weight:600;margin-bottom:10px;}
+  .edu-card h4{font-size:16px;margin-bottom:6px;line-height:1.4;}
+  .edu-card p{font-size:13px;color:var(--muted);}
+
+  .mem-list{display:flex;flex-direction:column;gap:14px;margin-bottom:60px;}
+  .mem-item{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;
+    padding:16px 22px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    font-size:14px;
+  }
+  .mem-item span:first-child{color:var(--text);}
+  .mem-item span:last-child{color:var(--muted-2);font-size:12.5px;}
+
+  .lang-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .lang-badge{
+    padding:16px 22px;
+    border-radius:14px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    min-width:150px;
+    position:relative;
+    overflow:hidden;
+  }
+  .lang-badge b{font-family:'Syne',sans-serif;font-size:15px;display:block;margin-bottom:8px;}
+  .lang-bar{height:5px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;}
+  .lang-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--amber));transition:width 1.2s ease;border-radius:4px;}
+  .lang-badge small{display:block;margin-top:8px;color:var(--muted-2);font-size:11.5px;}
+
+  /* contact */
+  #contact .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:start;}
+  .contact-card{
+    display:flex;align-items:center;gap:16px;
+    padding:20px 22px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:16px;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .contact-card:hover{transform:translateX(10px);border-color:var(--pink);}
+  .contact-icon{
+    width:42px;height:42px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(106,92,255,.15);
+    font-size:18px;flex-shrink:0;
+  }
+  .contact-card b{display:block;font-size:14.5px;}
+  .contact-card span{font-size:12.5px;color:var(--muted);}
+
+  .avatar-ripple{
+    position:relative;
+    width:240px;height:240px;
+    margin:0 auto;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ripple{
+    position:absolute;border-radius:50%;
+    border:1.5px solid var(--cyan);
+    opacity:0;
+    animation:rippleAnim 3.2s ease-out infinite;
+  }
+  .ripple:nth-child(2){animation-delay:1s;border-color:var(--pink);}
+  .ripple:nth-child(3){animation-delay:2s;border-color:var(--amber);}
+  @keyframes rippleAnim{
+    0%{width:70px;height:70px;opacity:.9;}
+    100%{width:240px;height:240px;opacity:0;}
+  }
+  .avatar-center{
+    width:110px;height:110px;border-radius:50%;
+    background:linear-gradient(140deg,var(--indigo),var(--pink));
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Syne',sans-serif;font-weight:800;font-size:30px;
+    animation:avPulse 2.6s ease-in-out infinite;
+    box-shadow:0 0 40px rgba(255,61,144,.4);
+  }
+  @keyframes avPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.06);}
+  }
+
+  footer{
+    text-align:center;
+    padding:40px 24px 50px;
+    font-size:12.5px;
+    color:var(--muted-2);
+    border-top:1px solid var(--line);
+    position:relative;z-index:1;
+  }
+
+  @media(max-width:980px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-card-wrap{height:340px;order:-1;}
+    .skills-layout{grid-template-columns:1fr;gap:40px;}
+    .grid-3{grid-template-columns:1fr 1fr;}
+    .edu-grid{grid-template-columns:1fr;}
+    #contact .wrap{grid-template-columns:1fr;}
+    .nav-links{
+      position:fixed;top:76px;left:0;right:0;
+      background:rgba(10,10,20,.97);
+      flex-direction:column;
+      padding:24px;
+      gap:18px;
+      border-bottom:1px solid var(--line);
+      transform:translateY(-140%);
+      transition:transform .4s ease;
+    }
+    .nav-links.open{transform:translateY(0);}
+    .nav-toggle{display:block;}
+  }
+  @media(max-width:600px){
+    section{padding:90px 20px;}
+    .grid-3{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important;}
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-initials">LI</div>
+  <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill"></div></div>
+  <div class="loader-label">LOADING PORTFOLIO</div>
+</div>
+
+<canvas id="particle-canvas"></canvas>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <div class="logo">Dr. Lina <span>Ismaeel</span></div>
+  <button class="nav-toggle" id="navToggle">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#skills">Expertise</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#procedures">Procedures</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="tag">DHA-Licensed · Available for Relocation to the UAE</div>
+      <h1 class="hero-name">Dr. Lina<br>Ismaeel</h1>
+      <p class="hero-role">Specialist Obstetrician &amp; Gynecologist — Surgical Consultant. Over two decades leading obstetric and gynecological surgical care across public, private and charitable hospitals in Syria, with a career total of 2,850+ procedures.</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-solid">Get in Touch</a>
+        <a href="#experience" class="btn btn-ghost">View Experience</a>
+      </div>
+    </div>
+    <div class="hero-card-wrap">
+      <div class="orb"></div>
+      <div class="ring"></div>
+      <div class="float-card">
+        <div class="float-initials">LI</div>
+        <div class="role">Obstetrician &amp; Gynecologist</div>
+        <div class="float-stats">
+          <div class="float-stat"><span>Career Procedures</span><b>2,850+</b></div>
+          <div class="float-stat"><span>Years in Practice</span><b>30+</b></div>
+          <div class="float-stat"><span>UAE Licensure</span><b>DHA</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-outer">
+  <div class="marquee-track">
+    <div class="marquee-item">Al‑Mowasat Syrian Society Hospital</div>
+    <div class="marquee-item">Al‑Shami Hospital</div>
+    <div class="marquee-item">Al‑Yahya Hospital</div>
+    <div class="marquee-item">Al‑Bader Hospital</div>
+    <div class="marquee-item">Lattakia National Hospital</div>
+    <div class="marquee-item">Adnan Kiwan Charitable Hospital</div>
+    <div class="marquee-item">Al‑Mowasat Syrian Society Hospital</div>
+    <div class="marquee-item">Al‑Shami Hospital</div>
+    <div class="marquee-item">Al‑Yahya Hospital</div>
+    <div class="marquee-item">Al‑Bader Hospital</div>
+    <div class="marquee-item">Lattakia National Hospital</div>
+    <div class="marquee-item">Adnan Kiwan Charitable Hospital</div>
+  </div>
+</div>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head reveal up">
+      <span class="eyebrow">Clinical Expertise</span>
+      <h2>Core competencies built over 30 years</h2>
+      <p>Surgical and clinical strengths developed across resident, consultant, and departmental leadership roles.</p>
+    </div>
+    <div class="skills-layout">
+      <div class="reveal left">
+        <div class="skill-row">
+          <div class="skill-top"><span>High-Volume Surgical Practice</span><span>98%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="98"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span>Obstetric &amp; Gynecological Ultrasound</span><span>96%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="96"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span>Antenatal, Intrapartum &amp; Postnatal Care</span><span>95%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="95"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span>Patient Care Management &amp; Quality Oversight</span><span>93%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="93"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span>Pelvic Floor &amp; Vaginal Reconstructive Surgery</span><span>92%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="92"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span>Clinical Leadership &amp; Department Supervision</span><span>90%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-width="90"></div></div>
+        </div>
+      </div>
+      <div class="reveal right">
+        <div class="chip-cloud">
+          <div class="chip">Hysterectomy</div>
+          <div class="chip">Caesarean Section</div>
+          <div class="chip">Ovarian Cystectomy</div>
+          <div class="chip">Pelvic Floor Repair</div>
+          <div class="chip">Ectopic Pregnancy Management</div>
+          <div class="chip">Vaginal Delivery</div>
+          <div class="chip">Cosmetic Gynecology</div>
+          <div class="chip">Obstetric Ultrasound</div>
+          <div class="chip">Antenatal Care</div>
+          <div class="chip">Clinical Governance</div>
+          <div class="chip">Department Supervision</div>
+          <div class="chip">DHA Licensure</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="section-head reveal up">
+      <span class="eyebrow">Professional Experience</span>
+      <h2>A career across resident, private and leadership roles</h2>
+      <p>From residency at a 550-bed public hospital to consultant surgeon and department supervisor at Damascus's leading private and charitable hospitals.</p>
+    </div>
+    <div class="timeline">
+
+      <div class="tl-item reveal left">
+        <div class="tl-top"><span class="tl-role">Resident Physician</span><span class="tl-date">1995 – 2002</span></div>
+        <div class="tl-org">Lattakia National Hospital (Public) · 550 beds</div>
+        <div class="tl-badges"><span class="badge">Public Hospital</span><span class="badge">Residency</span></div>
+      </div>
+
+      <div class="tl-item reveal right">
+        <div class="tl-top"><span class="tl-role">Head of Gynecology &amp; Obstetrics Division</span><span class="tl-date">2003 – 2005</span></div>
+        <div class="tl-org">Adnan Kiwan Charitable Hospital, Idlib (Surgical, Private) · 120 beds</div>
+        <div class="tl-badges"><span class="badge">Division Head</span><span class="badge">Surgical</span></div>
+      </div>
+
+      <div class="tl-item reveal left">
+        <div class="tl-top"><span class="tl-role">Specialist Surgeon / Consultant Physician</span><span class="tl-date">2006 – 2012</span></div>
+        <div class="tl-org">Al‑Yahya Hospital, Damascus (Private &amp; Charitable) · 30 beds</div>
+        <div class="tl-badges"><span class="badge">Consultant</span></div>
+      </div>
+
+      <div class="tl-item reveal right">
+        <div class="tl-top"><span class="tl-role">Specialist Surgeon / Consultant Physician</span><span class="tl-date">2006 – 2012</span></div>
+        <div class="tl-org">Al‑Bader Hospital, Damascus (Private) · 60 beds</div>
+        <div class="tl-badges"><span class="badge">Consultant</span></div>
+      </div>
+
+      <div class="tl-item reveal left">
+        <div class="tl-top"><span class="tl-role">Supervisor, Women's Clinic Department</span><span class="tl-date">2006 – 2012</span></div>
+        <div class="tl-org">Primary Health Care Clinic for Pregnant Women, Qudsaya, Damascus (Public)</div>
+        <div class="tl-badges"><span class="badge">Supervisor</span><span class="badge">Public Health</span></div>
+      </div>
+
+      <div class="tl-item reveal right">
+        <div class="tl-top"><span class="tl-role">Specialist Surgeon / Consultant Physician</span><span class="tl-date">2011 – Present</span></div>
+        <div class="tl-org">Al‑Shami Hospital, Damascus (Private) · 120 beds</div>
+        <div class="tl-badges"><span class="badge">Consultant</span><span class="badge">Current</span></div>
+      </div>
+
+      <div class="tl-item reveal left">
+        <div class="tl-top"><span class="tl-role">Specialist Physician</span><span class="tl-date">2006 – Present</span></div>
+        <div class="tl-org">Private Clinic, Damascus</div>
+        <div class="tl-badges"><span class="badge">Private Practice</span><span class="badge">Current</span></div>
+      </div>
+
+      <div class="tl-item reveal right">
+        <div class="tl-top"><span class="tl-role">Specialist Surgeon / Consultant Physician</span><span class="tl-date">2012 – Present</span></div>
+        <div class="tl-org">Al‑Mowasat Syrian Society Hospital, Damascus (Private &amp; Charitable) · 150 beds</div>
+        <div class="tl-badges"><span class="badge">Consultant</span><span class="badge">Current</span></div>
+      </div>
+
+      <div class="tl-item reveal left">
+        <div class="tl-top"><span class="tl-role">Supervisor, Women's Clinic Department</span><span class="tl-date">2020 – Present</span></div>
+        <div class="tl-org">Al‑Mowasat Syrian Society Hospital, Damascus (Private &amp; Charitable) · 150 beds</div>
+        <div class="tl-badges"><span class="badge">Supervisor</span><span class="badge">Current</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="procedures">
+  <div class="wrap">
+    <div class="section-head reveal up">
+      <span class="eyebrow">Surgical &amp; Clinical Portfolio</span>
+      <h2>Career surgical volume since 2002</h2>
+      <p>A career total of 2,850+ gynecological and obstetric procedures, spanning routine deliveries to complex reconstructive surgery.</p>
+    </div>
+    <div class="grid-3">
+      <div class="proc-card reveal up">
+        <span class="proc-emoji">🩺</span>
+        <h3>Vaginal Delivery &amp; Specialized Procedures</h3>
+        <div class="proc-count">1,600+</div>
+        <p>Natural deliveries and other specialized obstetric and surgical procedures across two decades of practice.</p>
+      </div>
+      <div class="proc-card reveal up">
+        <span class="proc-emoji">🔪</span>
+        <h3>Caesarean Section</h3>
+        <div class="proc-count">750+</div>
+        <p>High-volume caesarean surgery across public, private and charitable hospital settings.</p>
+      </div>
+      <div class="proc-card reveal up">
+        <span class="proc-emoji">🎗️</span>
+        <h3>Oophorocystectomy</h3>
+        <div class="proc-count">160+</div>
+        <p>Ovarian cystectomy procedures performed as part of routine and complex gynecological surgery.</p>
+      </div>
+      <div class="proc-card reveal up">
+        <span class="proc-emoji">🧵</span>
+        <h3>Anteroposterior Restoration</h3>
+        <div class="proc-count">125+</div>
+        <p>Pelvic floor repair and vaginal reconstructive surgery, including cosmetic gynecology procedures.</p>
+      </div>
+      <div class="proc-card reveal up">
+        <span class="proc-emoji">🏥</span>
+        <h3>Hysterectomy</h3>
+        <div class="proc-count">120+</div>
+        <p>Hysterectomy surgery performed as part of a high-volume gynecological surgical practice.</p>
+      </div>
+      <div class="proc-card reveal up">
+        <span class="proc-emoji">⚕️</span>
+        <h3>Ectopic Pregnancy</h3>
+        <div class="proc-count">105+</div>
+        <p>Surgical management of ectopic pregnancy cases across her consultant career.</p>
+      </div>
+    </div>
+
+    <div class="recent-table reveal up">
+      <table>
+        <thead>
+          <tr><th>Category</th><th>Procedures (2024 – 2026)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Deliveries (Normal &amp; Caesarean)</td><td class="num">750</td></tr>
+          <tr><td>Uterine Procedures (Hysterectomy &amp; Curettage)</td><td class="num">105</td></tr>
+          <tr><td>Cervical Procedures</td><td class="num">21</td></tr>
+          <tr><td>Pelvic Floor, Vaginal Reconstructive &amp; Cosmetic Gynecology</td><td class="num">40</td></tr>
+          <tr><td>Gynecological Cysts &amp; Tumors</td><td class="num">30</td></tr>
+          <tr><td>Other Procedures</td><td class="num">12</td></tr>
+          <tr><td><strong>Total (2024 – 2026)</strong></td><td class="num"><strong>958</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <div class="section-head reveal up">
+      <span class="eyebrow">Education &amp; Credentials</span>
+      <h2>Medical training, board certification &amp; memberships</h2>
+    </div>
+
+    <div class="edu-grid">
+      <div class="edu-card reveal up">
+        <div class="edu-year">1989 – 1995</div>
+        <h4>Certificate of Medicine</h4>
+        <p>Tishreen University</p>
+      </div>
+      <div class="edu-card reveal up">
+        <div class="edu-year">1996 – 2002</div>
+        <h4>Professional Certificate in Obstetrics, Gynecology &amp; Surgery</h4>
+        <p>Health Ministry &amp; Tishreen University</p>
+      </div>
+      <div class="edu-card reveal up">
+        <div class="edu-year">2016</div>
+        <h4>Syrian Board (Obstetrics &amp; Gynecology)</h4>
+        <p>Syrian Ministry of Health</p>
+      </div>
+    </div>
+
+    <div class="mem-list">
+      <div class="mem-item reveal left"><span>Member, Syrian Gynecology Society</span><span>2002 · Damascus</span></div>
+      <div class="mem-item reveal left"><span>Member, Syrian Physicians Syndicate</span><span>1995 · Damascus</span></div>
+      <div class="mem-item reveal left"><span>Member, Syrian Commission for Family Affairs (Government Organization)</span><span>2005 · Damascus</span></div>
+    </div>
+
+    <div class="lang-row">
+      <div class="lang-badge reveal up">
+        <b>Arabic</b>
+        <div class="lang-bar"><div class="lang-fill" data-width="100"></div></div>
+        <small>Native</small>
+      </div>
+      <div class="lang-badge reveal up">
+        <b>English</b>
+        <div class="lang-bar"><div class="lang-fill" data-width="70"></div></div>
+        <small>Good</small>
+      </div>
+      <div class="lang-badge reveal up">
+        <b>Computer Proficiency</b>
+        <div class="lang-bar"><div class="lang-fill" data-width="70"></div></div>
+        <small>Good</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div>
+      <div class="section-head reveal up" style="margin-bottom:36px;">
+        <span class="eyebrow">Get in Touch</span>
+        <h2>Available for relocation to the UAE</h2>
+        <p>DHA-licensed and ready for immediate relocation — reach out directly by phone or email.</p>
+      </div>
+
+      <div class="contact-card reveal left">
+        <div class="contact-icon">✉️</div>
+        <div><b>dr.linaismaeel@gmail.com</b><span>Email</span></div>
+      </div>
+      <div class="contact-card reveal left">
+        <div class="contact-icon">📱</div>
+        <div><b>+971 58 591 6970</b><span>Mobile (UAE)</span></div>
+      </div>
+      <div class="contact-card reveal left">
+        <div class="contact-icon">☎️</div>
+        <div><b>+963 11 314 4660 · +963 944 781 750</b><span>Phone / Mobile (Syria)</span></div>
+      </div>
+      <div class="contact-card reveal left">
+        <div class="contact-icon">📍</div>
+        <div><b>Damascus, Dummar — Building Island 4, Build 29</b><span>Location</span></div>
+      </div>
+      <div class="contact-card reveal left">
+        <div class="contact-icon">✅</div>
+        <div><b>Immediately Available</b><span>Relocation &amp; UAE entry eligibility</span></div>
+      </div>
+    </div>
+
+    <div class="reveal right">
+      <div class="avatar-ripple">
+        <div class="ripple"></div>
+        <div class="ripple"></div>
+        <div class="ripple"></div>
+        <div class="avatar-center">LI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 Dr. Lina Ismaeel — Specialist Obstetrician &amp; Gynecologist. DHA-Licensed Specialist.
+</footer>
+
+<script>
+/* ---------- Loader ---------- */
+window.addEventListener('load', () => {
+  const fill = document.getElementById('loaderFill');
+  requestAnimationFrame(() => { fill.style.transition = 'width 1.7s ease'; fill.style.width = '100%'; });
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+    document.getElementById('navbar').classList.add('show');
+  }, 2000);
+});
+
+/* ---------- Custom cursor ---------- */
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+window.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+});
+function animateRing(){
+  ringX += (mouseX - ringX) * 0.16;
+  ringY += (mouseY - ringY) * 0.16;
+  ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+document.querySelectorAll('a, button, .chip, .proc-card, .tl-item, .contact-card').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('active'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('active'));
+});
+
+/* ---------- Mobile nav ---------- */
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+});
+
+/* ---------- Particle network canvas ---------- */
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let w, h, particles;
+const colors = ['#6a5cff', '#ff3d90', '#2fe0d0', '#ffb84d'];
+
+function resize(){
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+function initParticles(){
+  const count = Math.min(90, Math.floor((w * h) / 16000));
+  particles = Array.from({length: count}, () => ({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: (Math.random() - 0.5) * 0.35,
+    vy: (Math.random() - 0.5) * 0.35,
+    r: Math.random() * 1.6 + 0.8,
+    c: colors[Math.floor(Math.random() * colors.length)]
+  }));
+}
+initParticles();
+
+function step(){
+  ctx.clearRect(0, 0, w, h);
+  for(const p of particles){
+    p.x += p.vx; p.y += p.vy;
+    if(p.x < 0 || p.x > w) p.vx *= -1;
+    if(p.y < 0 || p.y > h) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.c;
+    ctx.globalAlpha = 0.85;
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  for(let i = 0; i < particles.length; i++){
+    for(let j = i + 1; j < particles.length; j++){
+      const a = particles[i], b = particles[j];
+      const dx = a.x - b.x, dy = a.y - b.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if(dist < 130){
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = a.c;
+        ctx.globalAlpha = (1 - dist / 130) * 0.18;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(step);
+}
+step();
+
+/* ---------- Scroll reveal + skill bars ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+const skillFills = document.querySelectorAll('.skill-fill, .lang-fill');
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+revealEls.forEach(el => revealObserver.observe(el));
+
+const skillObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const el = entry.target;
+      const width = el.getAttribute('data-width');
+      setTimeout(() => {
+        el.style.width = width + '%';
+        el.classList.add('shine');
+      }, 150);
+      skillObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.4 });
+skillFills.forEach(el => skillObserver.observe(el));
+
+/* ---------- Navbar background on scroll ---------- */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if(window.scrollY > 40){ nav.style.boxShadow = '0 10px 30px -20px rgba(0,0,0,.6)'; }
+  else{ nav.style.boxShadow = 'none'; }
+});
+</script>
+</body>
+</html>
